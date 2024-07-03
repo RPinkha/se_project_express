@@ -4,7 +4,8 @@
   "description": "Backend to the What To Wear project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint ."
   },
   "author": "Ruven Pinkhasov",
   "license": "ISC",
