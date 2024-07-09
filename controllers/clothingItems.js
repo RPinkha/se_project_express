@@ -43,15 +43,22 @@ const deleteItem = (req, res) => {
     .then((item) => item.deleteOne())
     .then(() => res.status(OK).send({ message: "Item deleted successfully" }))
     .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({
-          message:
-            "there is no clothing item with the requested id, or the request was sent to a non-existent address.",
-        });
+      switch (err.name) {
+        case "CastError":
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+          });
+        case "DocumentNotFoundError":
+          return res.status(NOT_FOUND).send({
+            message:
+              "there is no user with the requested id, or the request was sent to a non-existent address.",
+          });
+        default:
+          return res
+            .status(INTERNAL_SERVER_ERROR)
+            .send({ message: "An error has occurred on the server." });
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
     });
 };
 
