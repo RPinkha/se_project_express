@@ -58,22 +58,16 @@ const deleteItem = (req, res) => {
 const likeItem = (req, res) => {
   const { itemId } = req.params;
   const owner = req.user._id;
-  Item.findByIdAndUpdate(
-    itemId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true }
-  )
+  Item.findByIdAndUpdate(itemId, { $addToSet: { likes: owner } }, { new: true })
     .orFail()
     .then((item) => res.status(OK).send(item))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res
-            .status(BAD_REQUEST)
-            .send({
-              message:
-                "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-            });
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+          });
         case "DocumentNotFoundError":
           return res.status(NOT_FOUND).send({
             message:
@@ -87,4 +81,30 @@ const likeItem = (req, res) => {
     });
 };
 
-module.exports = { getItems, createItem, deleteItem, likeItem };
+const dislikeItem = (req, res) => {
+  const { itemId } = req.params;
+  const owner = req.user._id;
+  Item.findByIdAndUpdate(itemId, { $pull: { likes: owner } }, { new: true })
+    .orFail()
+    .then((item) => res.status(OK).send(item))
+    .catch((err) => {
+      switch (err.name) {
+        case "CastError":
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+          });
+        case "DocumentNotFoundError":
+          return res.status(NOT_FOUND).send({
+            message:
+              "there is no user with the requested id, or the request was sent to a non-existent address.",
+          });
+        default:
+          return res
+            .status(INTERNAL_SERVER_ERROR)
+            .send({ message: "An error has occurred on the server." });
+      }
+    });
+};
+
+module.exports = { getItems, createItem, deleteItem, likeItem, dislikeItem };
