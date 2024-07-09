@@ -10,7 +10,7 @@ const {
 const getItems = (req, res) => {
   Item.find({})
     .then((items) => res.status(OK).send(items))
-    .catch((err) => {
+    .catch(() => {
       return res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
@@ -28,7 +28,7 @@ const createItem = (req, res) => {
         return res.status(BAD_REQUEST).send({
           message:
             "invalid data passed to the methods for creating an item, or invalid ID passed to the params.",
-        }); //invalid data passed to the methods for creating an item or updating an item
+        }); // invalid data passed to the methods for creating an item or updating an item
       }
       return res
         .status(INTERNAL_SERVER_ERROR)

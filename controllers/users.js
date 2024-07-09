@@ -10,7 +10,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(OK).send(users))
-    .catch((err) => {
+    .catch(() => {
       return res
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
@@ -42,12 +42,10 @@ const getUser = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res
-            .status(BAD_REQUEST)
-            .send({
-              message:
-                "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-            });
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+          });
         case "DocumentNotFoundError":
           return res.status(NOT_FOUND).send({
             message:
