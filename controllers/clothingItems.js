@@ -10,11 +10,11 @@ const {
 const getItems = (req, res) => {
   Item.find({})
     .then((items) => res.status(OK).send(items))
-    .catch(() => {
-      return res
+    .catch(() =>
+      res
         .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
+        .send({ message: "An error has occurred on the server." })
+    );
 };
 
 const createItem = (req, res) => {
