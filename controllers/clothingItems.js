@@ -9,7 +9,7 @@ const {
 
 const getItems = (req, res) => {
   Item.find({})
-    .then((items) => res.status(OK).send(items))
+    .then((items) => res.send(items))
     .catch(() =>
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -41,7 +41,7 @@ const deleteItem = (req, res) => {
   Item.findById(itemId)
     .orFail()
     .then((item) => item.deleteOne())
-    .then(() => res.status(OK).send({ message: "Item deleted successfully" }))
+    .then(() => res.send({ message: "Item deleted successfully" }))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
@@ -67,7 +67,7 @@ const likeItem = (req, res) => {
   const owner = req.user._id;
   Item.findByIdAndUpdate(itemId, { $addToSet: { likes: owner } }, { new: true })
     .orFail()
-    .then((item) => res.status(OK).send(item))
+    .then((item) => res.send(item))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
@@ -93,7 +93,7 @@ const dislikeItem = (req, res) => {
   const owner = req.user._id;
   Item.findByIdAndUpdate(itemId, { $pull: { likes: owner } }, { new: true })
     .orFail()
-    .then((item) => res.status(OK).send(item))
+    .then((item) => res.send(item))
     .catch((err) => {
       switch (err.name) {
         case "CastError":

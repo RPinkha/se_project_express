@@ -9,7 +9,7 @@ const {
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(OK).send(users))
+    .then((users) => res.send(users))
     .catch(() =>
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -38,7 +38,7 @@ const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
-    .then((user) => res.status(OK).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
