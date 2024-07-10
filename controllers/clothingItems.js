@@ -1,6 +1,5 @@
 const Item = require("../models/clothingItem");
 const {
-  OK,
   CREATED,
   BAD_REQUEST,
   NOT_FOUND,

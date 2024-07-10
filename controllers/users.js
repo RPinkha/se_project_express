@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const {
-  OK,
   CREATED,
   BAD_REQUEST,
   NOT_FOUND,
