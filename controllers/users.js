@@ -4,10 +4,12 @@ const jwt = require("jsonwebtoken");
 const {
   CREATED,
   BAD_REQUEST,
+  UNAUTHORIZED,
   NOT_FOUND,
   CONFLICT,
   INTERNAL_SERVER_ERROR,
 } = require("../utils/errors");
+const { JWT_SECRET } = require("../utils/config");
 
 const getUsers = (req, res) => {
   User.find({})
@@ -17,6 +19,22 @@ const getUsers = (req, res) => {
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." })
     );
+};
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      res.send({
+        token: jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        }),
+      });
+    })
+    .catch((err) => {
+      res.status(UNAUTHORIZED).send({ message: err.message });
+    });
 };
 
 const createUser = (req, res) => {
