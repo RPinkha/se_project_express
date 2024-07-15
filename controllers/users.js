@@ -5,6 +5,7 @@ const {
   CREATED,
   BAD_REQUEST,
   NOT_FOUND,
+  CONFLICT,
   INTERNAL_SERVER_ERROR,
 } = require("../utils/errors");
 
@@ -32,11 +33,14 @@ const createUser = (req, res) => {
       })
     )
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({
           message:
             "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+        });
+      } else if (err.code === 11000) {
+        return res.status(CONFLICT).send({
+          message: "email already exists",
         });
       }
       return res
