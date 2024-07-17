@@ -101,9 +101,7 @@ const getCurrentUser = (req, res) => {
   const { userId } = req.user._id;
   User.findById(userId)
     .orFail()
-    .then((user) =>
-      res.send({ name: user.name, avatar: user.avatar, email: user.email })
-    )
+    .then((user) => res.send(user))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
@@ -133,13 +131,13 @@ const modifyUser = (req, res) => {
     { runValidators: true }
   )
     .orFail()
-    .then((user) => res.send({ name: user.name, avatar: user.avatar }))
+    .then((user) => res.send(user))
     .catch((err) => {
       switch (err.name) {
         case "CastError":
           return res.status(BAD_REQUEST).send({
             message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+              "invalid data passed to the methods for modifying a user, or invalid ID passed to the params.",
           });
         case "DocumentNotFoundError":
           return res.status(NOT_FOUND).send({
