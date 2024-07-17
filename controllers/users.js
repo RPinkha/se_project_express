@@ -72,7 +72,7 @@ const createUser = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
+/* const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
@@ -95,7 +95,7 @@ const getUser = (req, res) => {
             .send({ message: "An error has occurred on the server." });
       }
     });
-};
+}; */
 
 const getCurrentUser = (req, res) => {
   const { userId } = req.user._id;
@@ -124,4 +124,17 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-module.exports = { login, createUser, getUser, getCurrentUser };
+const modifyUser = (req, res) => {
+  const { userId } = req.user._id;
+  const { name, avatar } = req.body;
+  User.findByIdAndUpdate(
+    userId,
+    { name: name, avatar: avatar },
+    { runValidators: true }
+  )
+    .orFail()
+    .then((user) => res.send({ name: user.name, avatar: user.avatar }))
+    .catch((err) => console.error(err));
+};
+
+module.exports = { login, createUser, getCurrentUser, modifyUser };
