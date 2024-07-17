@@ -125,7 +125,7 @@ const getCurrentUser = (req, res) => {
 };
 
 const modifyUser = (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
     userId,
