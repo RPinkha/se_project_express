@@ -23,7 +23,11 @@ const { JWT_SECRET } = require("../utils/config");
 
 const login = (req, res) => {
   const { email, password } = req.body;
-
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "Email and password are required" });
+  }
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
