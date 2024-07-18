@@ -45,9 +45,8 @@ const deleteItem = (req, res) => {
     .then((item) => {
       if (item.owner.toString() === loggedInUserId.toString()) {
         return item.deleteOne();
-      } else {
-        return Promise.reject({ name: "ForbiddenError" });
       }
+      return Promise.reject(new Error("ForbiddenError"));
     })
     .then(() => res.send({ message: "Item deleted successfully" }))
     .catch((err) => {

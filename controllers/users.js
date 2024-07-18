@@ -1,6 +1,6 @@
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 const {
   CREATED,
   BAD_REQUEST,
@@ -65,7 +65,7 @@ const createUser = (req, res) => {
           message:
             "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
         });
-      } else if (err.code === 11000) {
+      } if (err.code === 11000) {
         return res.status(CONFLICT).send({
           message: "email already exists",
         });
@@ -131,7 +131,7 @@ const modifyUser = (req, res) => {
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
     userId,
-    { name: name, avatar: avatar },
+    { name, avatar },
     { new: true, runValidators: true }
   )
     .orFail()
