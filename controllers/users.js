@@ -132,7 +132,7 @@ const modifyUser = (req, res) => {
   User.findByIdAndUpdate(
     userId,
     { name: name, avatar: avatar },
-    { runValidators: true }
+    { new: true, runValidators: true }
   )
     .orFail()
     .then((user) => res.send(user))
