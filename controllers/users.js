@@ -65,7 +65,8 @@ const createUser = (req, res) => {
           message:
             "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
         });
-      } if (err.code === 11000) {
+      }
+      if (err.code === 11000) {
         return res.status(CONFLICT).send({
           message: "email already exists",
         });
@@ -147,6 +148,11 @@ const modifyUser = (req, res) => {
           return res.status(NOT_FOUND).send({
             message:
               "there is no user with the requested id, or the request was sent to a non-existent address.",
+          });
+        case "ValidationError":
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for updating a user, or invalid ID passed to the params.",
           });
         default:
           return res
