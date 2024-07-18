@@ -102,7 +102,7 @@ const createUser = (req, res) => {
 }; */
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.user._id;
+  const userId = req.user._id;
   User.findById(userId)
     .orFail()
     .then((user) => res.send(user))
