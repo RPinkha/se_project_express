@@ -11,16 +11,6 @@ const {
 } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
-/* const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." })
-    );
-}; */
-
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -76,31 +66,6 @@ const createUser = (req, res) => {
         .send({ message: "An error has occurred on the server." });
     });
 };
-
-/* const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
-    .orFail()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      switch (err.name) {
-        case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
-        case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
-        default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
-      }
-    });
-}; */
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
@@ -160,6 +125,43 @@ const modifyUser = (req, res) => {
             .send({ message: "An error has occurred on the server." });
       }
     });
+};
+
+// To be used by an admin user
+
+const getUser = (req, res) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((err) => {
+      switch (err.name) {
+        case "CastError":
+          return res.status(BAD_REQUEST).send({
+            message:
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
+          });
+        case "DocumentNotFoundError":
+          return res.status(NOT_FOUND).send({
+            message:
+              "there is no user with the requested id, or the request was sent to a non-existent address.",
+          });
+        default:
+          return res
+            .status(INTERNAL_SERVER_ERROR)
+            .send({ message: "An error has occurred on the server." });
+      }
+    });
+};
+
+const getUsers = (req, res) => {
+  User.find({})
+    .then((users) => res.send(users))
+    .catch(() =>
+      res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." })
+    );
 };
 
 module.exports = { login, createUser, getCurrentUser, modifyUser };

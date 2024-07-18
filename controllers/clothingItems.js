@@ -28,7 +28,7 @@ const createItem = (req, res) => {
         return res.status(BAD_REQUEST).send({
           message:
             "invalid data passed to the methods for creating an item, or invalid ID passed to the params.",
-        }); // invalid data passed to the methods for creating an item or updating an item
+        });
       }
       return res
         .status(INTERNAL_SERVER_ERROR)
