@@ -127,9 +127,9 @@ const modifyUser = (req, res) => {
     });
 };
 
-// To be used by an admin user
+// To be used by an admin user in future itterations
 
-const getUser = (req, res) => {
+/* const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
@@ -162,6 +162,6 @@ const getUsers = (req, res) => {
         .status(INTERNAL_SERVER_ERROR)
         .send({ message: "An error has occurred on the server." })
     );
-};
+}; */
 
 module.exports = { login, createUser, getCurrentUser, modifyUser };
