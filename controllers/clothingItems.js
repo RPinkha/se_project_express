@@ -4,13 +4,13 @@ const BadRequestError = require("../errors/bad-request-err");
 const NotFoundError = require("../errors/not-found-err");
 const ForbiddenError = require("../errors/forbidden-err");
 
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   Item.find({})
     .then((items) => res.send(items))
     .catch((err) => next(err));
 };
 
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
@@ -28,7 +28,7 @@ const createItem = (req, res) => {
     });
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
   const loggedInUserId = req.user._id;
 
@@ -69,7 +69,7 @@ const deleteItem = (req, res) => {
     });
 };
 
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
   const { itemId } = req.params;
   const owner = req.user._id;
   Item.findByIdAndUpdate(itemId, { $addToSet: { likes: owner } }, { new: true })
@@ -95,7 +95,7 @@ const likeItem = (req, res) => {
     });
 };
 
-const dislikeItem = (req, res) => {
+const dislikeItem = (req, res, next) => {
   const { itemId } = req.params;
   const owner = req.user._id;
   Item.findByIdAndUpdate(itemId, { $pull: { likes: owner } }, { new: true })
