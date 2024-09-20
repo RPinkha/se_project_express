@@ -10,6 +10,10 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require("../utils/status-codes");
 const { JWT_SECRET } = require("../utils/config");
+const BadRequestError = require("../errors/bad-request-err");
+const UnauthorizedError = require("../errors/unauthorized-err");
+const NotFoundError = require("../errors/not-found-err");
+const ConflictError = require("../errors/conflict-err");
 
 const login = (req, res) => {
   const { email, password } = req.body;

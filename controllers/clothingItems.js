@@ -6,15 +6,14 @@ const {
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
 } = require("../utils/status-codes");
+const BadRequestError = require("../errors/bad-request-err");
+const NotFoundError = require("../errors/not-found-err");
+const ForbiddenError = require("../errors/forbidden-err");
 
 const getItems = (req, res) => {
   Item.find({})
     .then((items) => res.send(items))
-    .catch(() =>
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." })
-    );
+    .catch((err) => next(err));
 };
 
 const createItem = (req, res) => {
@@ -25,14 +24,13 @@ const createItem = (req, res) => {
     .then((item) => res.status(CREATED).send(item))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({
-          message:
-            "invalid data passed to the methods for creating an item, or invalid ID passed to the params.",
-        });
+        return next(
+          new BadRequestError(
+            "invalid data passed to the methods for creating an item, or invalid ID passed to the params."
+          )
+        );
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
@@ -54,23 +52,25 @@ const deleteItem = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         case "ForbiddenError":
-          return res.status(FORBIDDEN).send({
-            message: "user does not have permission to delete this item.",
-          });
+          return next(
+            new ForbiddenError(
+              "user does not have permission to delete this item."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+          return next(err);
       }
     });
 };
@@ -84,19 +84,19 @@ const likeItem = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+          return next(err);
       }
     });
 };
@@ -110,19 +110,19 @@ const dislikeItem = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+          return next(err);
       }
     });
 };
