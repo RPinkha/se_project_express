@@ -5,7 +5,7 @@ const {
   NOT_FOUND,
   FORBIDDEN,
   INTERNAL_SERVER_ERROR,
-} = require("../utils/errors");
+} = require("../utils/status-codes");
 
 const getItems = (req, res) => {
   Item.find({})

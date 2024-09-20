@@ -8,7 +8,7 @@ const {
   NOT_FOUND,
   CONFLICT,
   INTERNAL_SERVER_ERROR,
-} = require("../utils/errors");
+} = require("../utils/status-codes");
 const { JWT_SECRET } = require("../utils/config");
 
 const login = (req, res) => {
