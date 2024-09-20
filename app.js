@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const mainRouter = require("./routes/index");
+const errorHandler = require("./middlewares/error-handler");
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -16,12 +17,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/", mainRouter);
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? "An error occurred on the server" : message,
-  });
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {});
