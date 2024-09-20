@@ -1,14 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const {
-  CREATED,
-  BAD_REQUEST,
-  UNAUTHORIZED,
-  NOT_FOUND,
-  CONFLICT,
-  INTERNAL_SERVER_ERROR,
-} = require("../utils/status-codes");
+const { CREATED } = require("../utils/status-codes");
 const { JWT_SECRET } = require("../utils/config");
 const BadRequestError = require("../errors/bad-request-err");
 const UnauthorizedError = require("../errors/unauthorized-err");
@@ -18,9 +11,7 @@ const ConflictError = require("../errors/conflict-err");
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res
-      .status(BAD_REQUEST)
-      .send({ message: "Email and password are required" });
+    return next(new BadRequestError("Email and password are required."));
   }
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -33,11 +24,9 @@ const login = (req, res) => {
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
-        return res.status(UNAUTHORIZED).send({ message: err.message });
+        return next(new UnauthorizedError(err.message));
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
@@ -56,19 +45,16 @@ const createUser = (req, res) => {
     )
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({
-          message:
-            "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-        });
+        return next(
+          new BadRequestError(
+            "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+          )
+        );
       }
       if (err.code === 11000) {
-        return res.status(CONFLICT).send({
-          message: "email already exists",
-        });
+        return next(new ConflictError("email already exists"));
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+      return next(err);
     });
 };
 
@@ -80,19 +66,19 @@ const getCurrentUser = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+          return next(err);
       }
     });
 };
@@ -110,24 +96,25 @@ const modifyUser = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for modifying a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         case "ValidationError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for updating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+          return next(err);
       }
     });
 };
@@ -142,19 +129,19 @@ const modifyUser = (req, res) => {
     .catch((err) => {
       switch (err.name) {
         case "CastError":
-          return res.status(BAD_REQUEST).send({
-            message:
-              "invalid data passed to the methods for creating a user, or invalid ID passed to the params.",
-          });
+          return next(
+            new BadRequestError(
+              "invalid data passed to the methods for creating a user, or invalid ID passed to the params."
+            )
+          );
         case "DocumentNotFoundError":
-          return res.status(NOT_FOUND).send({
-            message:
-              "there is no user with the requested id, or the request was sent to a non-existent address.",
-          });
+          return next(
+            new NotFoundError(
+              "there is no user with the requested id, or the request was sent to a non-existent address."
+            )
+          );
         default:
-          return res
-            .status(INTERNAL_SERVER_ERROR)
-            .send({ message: "An error has occurred on the server." });
+        return next(err);
       }
     });
 };
@@ -162,10 +149,7 @@ const modifyUser = (req, res) => {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." })
+    .catch((err) => next(err));
     );
 }; */
 
