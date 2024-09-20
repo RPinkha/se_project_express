@@ -1,11 +1,5 @@
 const Item = require("../models/clothingItem");
-const {
-  CREATED,
-  BAD_REQUEST,
-  NOT_FOUND,
-  FORBIDDEN,
-  INTERNAL_SERVER_ERROR,
-} = require("../utils/status-codes");
+const { CREATED } = require("../utils/status-codes");
 const BadRequestError = require("../errors/bad-request-err");
 const NotFoundError = require("../errors/not-found-err");
 const ForbiddenError = require("../errors/forbidden-err");
