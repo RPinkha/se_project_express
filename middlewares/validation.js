@@ -61,7 +61,7 @@ module.exports.validateLogin = celebrate({
 });
 
 module.exports.validateId = celebrate({
-  body: Joi.object().keys({
+  params: Joi.object().keys({
     itemId: Joi.string().required().hex().length(24).messages({
       "string.empty": 'The "id" field must be filled in',
       "string.hex": 'The "id" field must be a valid hex string',
