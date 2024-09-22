@@ -83,12 +83,3 @@ module.exports.validateUpdateProfile = celebrate({
     }),
   }),
 });
-
-module.exports = {
-  validateClothingItem,
-  validateUser,
-  validateLogin,
-  validateId,
-  validateURL,
-  updateProfileValidationSchema,
-};
