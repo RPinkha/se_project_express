@@ -5,6 +5,7 @@ require("dotenv").config();
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const apiLimiter = require("./middlewares/rateLimiter");
+const helmet = require("helmet");
 
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
@@ -17,10 +18,11 @@ mongoose
   .then(() => {})
   .catch(console.error);
 
+app.use(apiLimiter);
+app.use(helmet());
+
 app.use(cors());
 app.use(express.json());
-
-app.use(apiLimiter);
 
 app.get("/crash-test", () => {
   setTimeout(() => {
