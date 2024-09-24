@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const apiLimiter = require("./middlewares/rateLimiter");
 
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
@@ -18,6 +19,8 @@ mongoose
 
 app.use(cors());
 app.use(express.json());
+
+app.use(apiLimiter);
 
 app.get("/crash-test", () => {
   setTimeout(() => {
