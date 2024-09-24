@@ -1,3 +1,7 @@
+# Deployed site can be found here:
+
+https://wtwr-rp.fairuse.org/
+
 # WTWR (What to Wear?): Back End
 
 This back-end project is to create a server for the WTWR application.
